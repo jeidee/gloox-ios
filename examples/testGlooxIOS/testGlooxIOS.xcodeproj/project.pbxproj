@@ -16,7 +16,8 @@
 		609378781D72CAEB007DC36A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 609378761D72CAEB007DC36A /* LaunchScreen.storyboard */; };
 		609378901D72CEEB007DC36A /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6093788F1D72CEEB007DC36A /* libresolv.9.tbd */; };
 		609378921D72CF0B007DC36A /* libz.1.1.3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 609378911D72CF0B007DC36A /* libz.1.1.3.tbd */; };
-		6093789C1D72D6D7007DC36A /* libgloox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6093789B1D72D6D7007DC36A /* libgloox.a */; };
+		60AF49AE1D746A3300A017C0 /* libgloox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60AF49AD1D746A3300A017C0 /* libgloox.a */; };
+		60F7BA321D73B0F500E312B3 /* GlooxInterfaceIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 60F7BA311D73B0F500E312B3 /* GlooxInterfaceIOS.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,9 +34,11 @@
 		609378791D72CAEB007DC36A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6093788F1D72CEEB007DC36A /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
 		609378911D72CF0B007DC36A /* libz.1.1.3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.1.3.tbd; path = usr/lib/libz.1.1.3.tbd; sourceTree = SDKROOT; };
-		609378971D72D6D7007DC36A /* gloox_callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gloox_callback.h; sourceTree = "<group>"; };
-		609378981D72D6D7007DC36A /* gloox_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gloox_interface.h; sourceTree = "<group>"; };
-		6093789B1D72D6D7007DC36A /* libgloox.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libgloox.a; sourceTree = "<group>"; };
+		60AF49AA1D746A3300A017C0 /* gloox_callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gloox_callback.h; sourceTree = "<group>"; };
+		60AF49AB1D746A3300A017C0 /* gloox_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gloox_interface.h; sourceTree = "<group>"; };
+		60AF49AD1D746A3300A017C0 /* libgloox.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libgloox.a; sourceTree = "<group>"; };
+		60F7BA301D73B0F500E312B3 /* GlooxInterfaceIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlooxInterfaceIOS.h; sourceTree = "<group>"; };
+		60F7BA311D73B0F500E312B3 /* GlooxInterfaceIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GlooxInterfaceIOS.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,7 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6093789C1D72D6D7007DC36A /* libgloox.a in Frameworks */,
+				60AF49AE1D746A3300A017C0 /* libgloox.a in Frameworks */,
 				609378921D72CF0B007DC36A /* libz.1.1.3.tbd in Frameworks */,
 				609378901D72CEEB007DC36A /* libresolv.9.tbd in Frameworks */,
 			);
@@ -59,7 +62,7 @@
 				6093788F1D72CEEB007DC36A /* libresolv.9.tbd */,
 				609378641D72CAEB007DC36A /* testGlooxIOS */,
 				609378631D72CAEB007DC36A /* Products */,
-				609378951D72D6D7007DC36A /* libgloox */,
+				60AF49A81D746A3300A017C0 /* libgloox */,
 			);
 			sourceTree = "<group>";
 		};
@@ -78,6 +81,8 @@
 				609378691D72CAEB007DC36A /* AppDelegate.m */,
 				6093786B1D72CAEB007DC36A /* ViewController.h */,
 				6093786C1D72CAEB007DC36A /* ViewController.mm */,
+				60F7BA301D73B0F500E312B3 /* GlooxInterfaceIOS.h */,
+				60F7BA311D73B0F500E312B3 /* GlooxInterfaceIOS.mm */,
 				6093786E1D72CAEB007DC36A /* Main.storyboard */,
 				609378741D72CAEB007DC36A /* Assets.xcassets */,
 				609378761D72CAEB007DC36A /* LaunchScreen.storyboard */,
@@ -96,28 +101,28 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		609378951D72D6D7007DC36A /* libgloox */ = {
+		60AF49A81D746A3300A017C0 /* libgloox */ = {
 			isa = PBXGroup;
 			children = (
-				609378961D72D6D7007DC36A /* include */,
-				6093789A1D72D6D7007DC36A /* lib */,
+				60AF49A91D746A3300A017C0 /* include */,
+				60AF49AC1D746A3300A017C0 /* lib */,
 			);
 			path = libgloox;
 			sourceTree = "<group>";
 		};
-		609378961D72D6D7007DC36A /* include */ = {
+		60AF49A91D746A3300A017C0 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				609378971D72D6D7007DC36A /* gloox_callback.h */,
-				609378981D72D6D7007DC36A /* gloox_interface.h */,
+				60AF49AA1D746A3300A017C0 /* gloox_callback.h */,
+				60AF49AB1D746A3300A017C0 /* gloox_interface.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
 		};
-		6093789A1D72D6D7007DC36A /* lib */ = {
+		60AF49AC1D746A3300A017C0 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				6093789B1D72D6D7007DC36A /* libgloox.a */,
+				60AF49AD1D746A3300A017C0 /* libgloox.a */,
 			);
 			path = lib;
 			sourceTree = "<group>";
@@ -193,6 +198,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6093786D1D72CAEB007DC36A /* ViewController.mm in Sources */,
+				60F7BA321D73B0F500E312B3 /* GlooxInterfaceIOS.mm in Sources */,
 				609378731D72CAEB007DC36A /* testGlooxIOS.xcdatamodeld in Sources */,
 				6093786A1D72CAEB007DC36A /* AppDelegate.m in Sources */,
 				609378671D72CAEB007DC36A /* main.m in Sources */,
@@ -354,6 +360,7 @@
 				6093787E1D72CAEB007DC36A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

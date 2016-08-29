@@ -23,7 +23,25 @@ extern "C" {
     typedef void (*callbackItemUnsubscribedFunc)(const char* jid);
     typedef void (*callbackItemRemovedFunc)(const char* jid);
     typedef void (*callbackItemUpdatedFunc)(const char* jid);
-    typedef void (*callbackMessageFunc)(int msgType, const char* subject, const char* body, const char* thread, void* session);
+    typedef void (*callbackMessageFunc)(const char* jid, int msgType, const char* subject, const char* body, const char* thread, void* session);
+
+    class IGlooxCallback {
+    public:
+        virtual void onConnect(void) = 0;
+        virtual void onDisconnect(int e) = 0;
+        virtual void onLog(const char* tag, const char* log) = 0;
+        virtual void onRoster(const char* jid, const char* nickname, int subscription, const char* groups) = 0;
+        virtual void onVCard(const char* jid, const char* nickname, const char* photo) = 0;
+        virtual void onPresence(const char* rosterJid, const char* rosterNickname, int rosterSubscription, const char* resource, int presence, const char* msg) = 0;
+        virtual void onSubscriptionRequest(const char* jid, const char* msg) = 0;
+        virtual void onUnsubscriptionRequest(const char* jid, const char* msg) = 0;
+        virtual void onItemSubscribed(const char* jid) = 0;
+        virtual void onItemAdded(const char* jid) = 0;
+        virtual void onItemUnsubscribed(const char* jid) = 0;
+        virtual void onItemRemoved(const char* jid) = 0;
+        virtual void onItemUpdated(const char* jid) = 0;
+        virtual void onMessage(const char* jid, int msgType, const char* subject, const char* body, const char* thread, void* session) = 0;
+    };
 }
 
 #endif /* GLOOX_CALLBACK_H__ */

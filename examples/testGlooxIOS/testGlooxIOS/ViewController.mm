@@ -7,49 +7,88 @@
 //
 
 #import "ViewController.h"
-#include "gloox_interface.h"
-
-#include <thread>
-
 @interface ViewController ()
 
 @end
 
 @implementation ViewController
 
-void* g_gloox = NULL;
-std::thread g_recvThread;
-
-void onLog(const char* tag, const char* log) {
-    printf("%s :: %s\n", tag, log);
-}
-
-void recvLoop() {
-    while(true) {
-        gwRecv(g_gloox);
-    }
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    g_gloox = gwCreateInstance();
-    
-    gwRegisterOnLog(g_gloox, &onLog);
-    
-    gwConnect(g_gloox, "test1@bypass", "1234", "192.168.0.202", 5223);
-    
-    g_recvThread = std::thread(recvLoop);
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [[GlooxInterfaceIOS getInstance] addEventHandler:self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    //gwDeleteInstance(client);
+    [[GlooxInterfaceIOS getInstance] removeEventHandler:self];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)addLog:(NSString*)log {
+    self.txtLog.text = [self.txtLog.text stringByAppendingFormat:@"%@\n", log];
+    
+    if(self.txtLog.text.length > 0 ) {
+        NSRange bottom = NSMakeRange(self.txtLog.text.length -1, 1);
+        [self.txtLog scrollRangeToVisible:bottom];
+    }
+}
+
+- (IBAction)doConnect:(id)sender {
+    
+    
+    NSString *jid = self.txtId.text;
+    NSString *pwd = self.txtPwd.text;
+    NSString *host = self.txtHost.text;
+    NSString *port = self.txtPort.text;
+    
+    if ([[GlooxInterfaceIOS getInstance] connect:jid withPwd:pwd withHost:host withPort:[port intValue]]) {
+        [self addLog:@"Connecting..."];
+    } else {
+        [self addLog:@"Connection failed."];
+    }
+}
+
+- (IBAction)doRemoveLog:(id)sender {
+    self.txtLog.text = [NSString stringWithString:@""];
+}
+
+- (IBAction)doDisconnect:(id)sender {
+    [[GlooxInterfaceIOS getInstance] disConnect];
+}
+
+- (IBAction)doSend:(id)sender {
+    [[GlooxInterfaceIOS getInstance] sendMessage:self.txtToJid.text withMsg:self.txtMessage.text];
+}
+
+#pragma mark GlooxDelegate
+
+- (void) onConnect {
+    [self addLog:@"OnConnect"];
+    
+    [self.btnConnect setHidden:YES];
+    [self.btnDisconnect setHidden:NO];
+    [self.btnSend setHidden:NO];
+}
+
+- (void) onDisconnect:(int)e {
+    [self addLog:[NSString stringWithFormat:@"OnDisconnect] e: %d", e]];
+    
+    [self.btnConnect setHidden:NO];
+    [self.btnDisconnect setHidden:YES];
+    [self.btnSend setHidden:YES];
+}
+
+- (void) onLog:(NSString *)tag withLog:(NSString *)log {
+    if ([self.swLog isOn]) {
+        [self addLog:[NSString stringWithFormat:@"OnLog]%@ :: %@\n", tag, log]];        
+    }
 }
 
 @end

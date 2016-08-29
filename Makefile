@@ -18,11 +18,11 @@ SOURCES := $(shell find $(SRCDIR) -maxdepth 1 -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
 CFLAGS := -arch $(ARCH) -isysroot $(SDKROOT) -miphoneos-version-min=7.0 -fembed-bitcode
-CFLAGS += -I$(GLOOX_NAME)/src -std=c++11
+CFLAGS += -I$(GLOOX_NAME)/src
 
-all: get_gloox add_sources $(TARGET)
+all: add_sources $(TARGET)
 
-get_gloox:
+gloox:
 	test -f $(GLOOX_TAR) || wget http://camaya.net/download/$(GLOOX_TAR)
 	test -d $(GLOOX_NAME) || tar xvfz $(GLOOX_TAR)
 
@@ -32,10 +32,10 @@ add_sources:
 $(TARGET): $(OBJECTS)
 	@mkdir -p $(TARGETDIR)/lib
 	@mkdir -p $(TARGETDIR)/include
-	@echo "Build shared library... $<"
+	@echo "Build shared library..."
 	ar rcs $@ $(BUILDDIR)/*.o
 	ranlib $@
-	cp -f ./src/gloox_interface.h gloox_callback.h $(TARGETDIR)/include/
+	cp -f ./src/gloox_interface.h ./src/gloox_callback.h $(TARGETDIR)/include/
 
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
@@ -45,6 +45,10 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 clean:
+	rm -rf $(BUILDDIR)
+	rm -rf $(TARGETDIR)
+
+distclean:
 	rm -rf $(BUILDDIR)
 	rm -rf $(TARGETDIR)
 	rm -rf $(GLOOX_NAME)

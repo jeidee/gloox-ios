@@ -44,7 +44,6 @@ using namespace gloox;
 #include <list>
 #include <sstream>
 #include <mutex>
-#include <thread>
 
 using namespace std;
 
@@ -91,9 +90,6 @@ namespace jd {
         void setLoginInfo(const char* jid, const char* pwd, const char* host, int port);
         const char* jid() { return m_loginInfo.jid.c_str(); }
 
-        // for receive thread
-        static void recvLoop(GlooxWrapper* instance);
-        
         // for connection
         virtual bool connect();
         virtual bool disConnect();
@@ -115,7 +111,10 @@ namespace jd {
         void setNickname(const char* nickname);
         void setPhoto(const char* photo);
         
-        
+        // for callback interface
+        void registerCallback(IGlooxCallback* callback) {
+            m_callback = callback;
+        }
         // for callback functions
         void registerOnConnect(callbackConnectFunc callback) {
             m_onConnect = callback;
@@ -125,6 +124,39 @@ namespace jd {
         }
         void registerOnLog(callbackLogFunc callback) {
             m_onLog = callback;
+        }
+        void registerOnRoster(callbackRosterFunc callback) {
+            m_onRoster = callback;
+        }
+        void registerOnVCard(callbackVCardFunc callback) {
+            m_onVCard = callback;
+        }
+        void registerOnPresence(callbackPresenceFunc callback) {
+            m_onPresence = callback;
+        }
+        void registerOnSubscriptionRequest(callbackSubscriptionRequestFunc callback) {
+            m_onSubscriptionRequest = callback;
+        }
+        void registerOnUnsubscriptionRequest(callbackUnsubscriptionRequestFunc callback) {
+            m_onUnsubscriptionRequest = callback;
+        }
+        void registerOnItemSubscribed(callbackItemSubscribedFunc callback) {
+            m_onItemSubscribed = callback;
+        }
+        void registerOnItemUnsubscribed(callbackItemUnsubscribedFunc callback) {
+            m_onItemUnsubscribed = callback;
+        }
+        void registerOnItemAdded(callbackItemAddedFunc callback) {
+            m_onItemAdded = callback;
+        }
+        void registerOnItemRemoved(callbackItemRemovedFunc callback) {
+            m_onItemRemoved = callback;
+        }
+        void registerOnItemUpdated(callbackItemUpdatedFunc callback) {
+            m_onItemUpdated = callback;
+        }
+        void registerOnMessage(callbackMessageFunc callback) {
+            m_onMessage = callback;
         }
         
     protected:
@@ -210,8 +242,6 @@ namespace jd {
         //    ChatStateFilter*    m_chatStateFilter;
         MessageSessionT m_sessions;
 
-        std::thread m_recvThread;
-        
         Client*             m_client;
         LoginInfo           m_loginInfo;
         VCardManager*       m_vcardManager;
@@ -223,6 +253,20 @@ namespace jd {
         callbackConnectFunc     m_onConnect;
         callbackDisconnectFunc  m_onDisconnect;
         callbackLogFunc         m_onLog;
+        callbackRosterFunc      m_onRoster;
+        callbackVCardFunc       m_onVCard;
+        callbackPresenceFunc    m_onPresence;
+        callbackSubscriptionRequestFunc     m_onSubscriptionRequest;
+        callbackUnsubscriptionRequestFunc   m_onUnsubscriptionRequest;
+        callbackItemSubscribedFunc      m_onItemSubscribed;
+        callbackItemAddedFunc           m_onItemAdded;
+        callbackItemUnsubscribedFunc    m_onItemUnsubscribed;
+        callbackItemRemovedFunc m_onItemRemoved;
+        callbackItemUpdatedFunc m_onItemUpdated;
+        callbackMessageFunc     m_onMessage;
+        // callback interface
+        IGlooxCallback* m_callback;
+
         
 #ifdef __ANDROID_NDK__
         JavaVM*     m_jvm;

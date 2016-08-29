@@ -46,7 +46,20 @@ namespace jd {
           m_vcardManager(NULL)
         , m_onConnect(NULL)
         , m_onLog(NULL)
-        , m_onDisconnect(NULL){
+        , m_onDisconnect(NULL)
+        , m_onRoster(NULL)
+        , m_onVCard(NULL)
+        , m_onPresence(NULL)
+        , m_onSubscriptionRequest(NULL)
+        , m_onUnsubscriptionRequest(NULL)
+        , m_onItemSubscribed(NULL)
+        , m_onItemAdded(NULL)
+        , m_onItemUnsubscribed(NULL)
+        , m_onItemRemoved(NULL)
+        , m_onItemUpdated(NULL)
+        , m_onMessage(NULL)
+        , m_callback(NULL)
+        {
 #endif
             //         , m_session(NULL)
             //         , m_messageEventFilter(NULL)
@@ -110,12 +123,6 @@ namespace jd {
             
             m_vcardManager = new VCardManager(m_client);
             
-            // if(m_client->connect(false)) {
-            //     std::thread t(GlooxWrapper::recvLoop, this);
-            //     return true;
-            // } else {
-            //     return false;
-            // }
             return m_client->connect(false);
         }
         
@@ -124,12 +131,6 @@ namespace jd {
             return true;
         }
 
-        void GlooxWrapper::recvLoop(GlooxWrapper* instance) {
-            while(true) {
-                instance->recv();
-            }
-        }
-        
         void GlooxWrapper::fetchVCard(const char* jid) {
             JID j(jid);
             m_vcardManager->fetchVCard(string(jid), this);
@@ -499,6 +500,9 @@ namespace jd {
             //msg.methodInfo.env->DeleteLocalRef(stringArg);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onConnect();
+            }
             
             if (m_onConnect != NULL) {
                 m_onConnect();
@@ -519,6 +523,13 @@ namespace jd {
             //msg.methodInfo.env->DeleteLocalRef(stringArg);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onDisconnect(e);
+            }
+
+            if (m_onDisconnect != NULL) {
+                m_onDisconnect(e);
+            }
         }
         
         void GlooxWrapper::callbackRoster(const Roster& roster) {
@@ -561,6 +572,24 @@ namespace jd {
             env->DeleteLocalRef(rosterCls);
             env->DeleteLocalRef(rosterObj);
 #endif
+            for (Roster::const_iterator it = roster.begin(); it != roster.end(); ++it) {
+                const char* jid = (*it).second->jid().c_str();
+                const char* nickname = (*it).second->name().c_str();
+                int subscription = (int)(*it).second->subscription();
+                StringList groups = (*it).second->groups();
+                std::string groupsTmp("");
+                for(StringList::const_iterator itg = groups.begin() ; itg != groups.end(); ++itg ) {
+                    groupsTmp = (*itg) + ",";
+                }
+                
+                if (m_callback != NULL) {
+                    m_callback->onRoster(jid, nickname, subscription, groupsTmp.c_str());
+                }
+                
+                if (m_onRoster != NULL) {
+                    m_onRoster(jid, nickname, subscription, groupsTmp.c_str());
+                }
+            }
         }
         
         void GlooxWrapper::callbackVCard(const char* jid, const char* nickname, const char* photo) {
@@ -583,6 +612,13 @@ namespace jd {
             methodInfo.env->DeleteLocalRef(photoStr);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onVCard(jid, nickname, photo);
+            }
+
+            if (m_onVCard != NULL) {
+                m_onVCard(jid, nickname, photo);
+            }
         }
         
         void GlooxWrapper::callbackItemSubscribed(const char* jid) {
@@ -601,6 +637,13 @@ namespace jd {
             methodInfo.env->DeleteLocalRef(jidStr);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onItemSubscribed(jid);
+            }
+
+            if (m_onItemSubscribed != NULL) {
+                m_onItemSubscribed(jid);
+            }
         }
         
         void GlooxWrapper::callbackItemAdded(const char* jid) {
@@ -619,6 +662,13 @@ namespace jd {
             methodInfo.env->DeleteLocalRef(jidStr);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onItemAdded(jid);
+            }
+
+            if (m_onItemAdded != NULL) {
+                m_onItemAdded(jid);
+            }
         }
         
         void GlooxWrapper::callbackItemUnsubscribed(const char* jid) {
@@ -637,6 +687,13 @@ namespace jd {
             methodInfo.env->DeleteLocalRef(jidStr);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onItemUnsubscribed(jid);
+            }
+
+            if (m_onItemUnsubscribed != NULL) {
+                m_onItemUnsubscribed(jid);
+            }
         }
         
         void GlooxWrapper::callbackItemRemoved(const char* jid) {
@@ -655,6 +712,13 @@ namespace jd {
             methodInfo.env->DeleteLocalRef(jidStr);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onItemRemoved(jid);
+            }
+
+            if (m_onItemRemoved != NULL) {
+                m_onItemRemoved(jid);
+            }
         }
         
         void GlooxWrapper::callbackItemUpdated(const char* jid) {
@@ -673,6 +737,13 @@ namespace jd {
             methodInfo.env->DeleteLocalRef(jidStr);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onItemUpdated(jid);
+            }
+
+            if (m_onItemUpdated != NULL) {
+                m_onItemUpdated(jid);
+            }
         }
         
         void GlooxWrapper::callbackSubscriptionRequest(const char* jid, const char* msg) {
@@ -693,6 +764,13 @@ namespace jd {
             methodInfo.env->DeleteLocalRef(msgStr);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onSubscriptionRequest(jid, msg);
+            }
+
+            if (m_onSubscriptionRequest != NULL) {
+                m_onSubscriptionRequest(jid, msg);
+            }
         }
         
         void GlooxWrapper::callbackUnsubscriptionRequest(const char* jid, const char* msg) {
@@ -712,6 +790,13 @@ namespace jd {
             methodInfo.env->DeleteLocalRef(msgStr);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onUnsubscriptionRequest(jid, msg);
+            }
+
+            if (m_onUnsubscriptionRequest != NULL) {
+                m_onUnsubscriptionRequest(jid, msg);
+            }
         }
         
         void GlooxWrapper::callbackPresence(const RosterItem& roster, const char* resource, Presence::PresenceType presence, const char* msg) {
@@ -754,6 +839,19 @@ namespace jd {
             env->DeleteLocalRef(rosterObj);
             
 #endif
+            if (m_callback != NULL) {
+                const char* rosterJid = roster.jid().c_str();
+                const char* rosterNickname = roster.name().c_str();
+                int rosterSubscription = (int)roster.subscription();
+                m_callback->onPresence(rosterJid, rosterNickname, rosterSubscription, resource, (int)presence, msg);
+            }
+
+            if (m_onPresence != NULL) {
+                const char* rosterJid = roster.jid().c_str();
+                const char* rosterNickname = roster.name().c_str();
+                int rosterSubscription = (int)roster.subscription();
+                m_onPresence(rosterJid, rosterNickname, rosterSubscription, resource, (int)presence, msg);
+            }
         }
         
         void GlooxWrapper::callbackMessage(const Message& msg, MessageSession* session) {
@@ -780,9 +878,20 @@ namespace jd {
             methodInfo.env->DeleteLocalRef(threadStr);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
 #endif
+            if (m_callback != NULL) {
+                m_callback->onMessage(session->target().bare().c_str(), (int)msg.subtype(), msg.subject().c_str(), msg.body().c_str(), msg.thread().c_str(), session);
+            }
+
+            if (m_onMessage != NULL) {
+                m_onMessage(session->target().bare().c_str(), (int)msg.subtype(), msg.subject().c_str(), msg.body().c_str(), msg.thread().c_str(), session);
+            }
         }
         
         void GlooxWrapper::callbackLog(const char *tag, const char *log) {
+            if (m_callback != NULL) {
+                m_callback->onLog(tag, log);
+            }
+
             if (m_onLog != NULL) {
                 m_onLog(tag, log);
             }
