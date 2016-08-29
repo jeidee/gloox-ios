@@ -56,7 +56,7 @@
 }
 
 - (IBAction)doRemoveLog:(id)sender {
-    self.txtLog.text = [NSString stringWithString:@""];
+    self.txtLog.text = @"";
 }
 
 - (IBAction)doDisconnect:(id)sender {
