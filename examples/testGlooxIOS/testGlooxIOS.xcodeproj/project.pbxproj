@@ -16,8 +16,8 @@
 		609378781D72CAEB007DC36A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 609378761D72CAEB007DC36A /* LaunchScreen.storyboard */; };
 		609378901D72CEEB007DC36A /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6093788F1D72CEEB007DC36A /* libresolv.9.tbd */; };
 		609378921D72CF0B007DC36A /* libz.1.1.3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 609378911D72CF0B007DC36A /* libz.1.1.3.tbd */; };
-		60AF49B81D7477C000A017C0 /* libgloox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60AF49B51D7477C000A017C0 /* libgloox.a */; };
-		60AF49B91D7477C000A017C0 /* GlooxInterfaceIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 60AF49B71D7477C000A017C0 /* GlooxInterfaceIOS.mm */; };
+		60AF49C41D750F2100A017C0 /* GlooxInterfaceIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 60AF49C21D750F2100A017C0 /* GlooxInterfaceIOS.mm */; };
+		60AF49C81D750F7000A017C0 /* libgloox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60AF49C71D750F7000A017C0 /* libgloox.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,11 +34,11 @@
 		609378791D72CAEB007DC36A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6093788F1D72CEEB007DC36A /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
 		609378911D72CF0B007DC36A /* libz.1.1.3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.1.3.tbd; path = usr/lib/libz.1.1.3.tbd; sourceTree = SDKROOT; };
-		60AF49B11D7477C000A017C0 /* gloox_callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gloox_callback.h; sourceTree = "<group>"; };
-		60AF49B21D7477C000A017C0 /* gloox_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gloox_interface.h; sourceTree = "<group>"; };
-		60AF49B31D7477C000A017C0 /* GlooxInterfaceIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlooxInterfaceIOS.h; sourceTree = "<group>"; };
-		60AF49B51D7477C000A017C0 /* libgloox.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libgloox.a; sourceTree = "<group>"; };
-		60AF49B71D7477C000A017C0 /* GlooxInterfaceIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GlooxInterfaceIOS.mm; sourceTree = "<group>"; };
+		60AF49BC1D750F2100A017C0 /* gloox_callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gloox_callback.h; sourceTree = "<group>"; };
+		60AF49BD1D750F2100A017C0 /* gloox_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gloox_interface.h; sourceTree = "<group>"; };
+		60AF49BE1D750F2100A017C0 /* GlooxInterfaceIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlooxInterfaceIOS.h; sourceTree = "<group>"; };
+		60AF49C21D750F2100A017C0 /* GlooxInterfaceIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GlooxInterfaceIOS.mm; sourceTree = "<group>"; };
+		60AF49C71D750F7000A017C0 /* libgloox.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libgloox.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,7 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60AF49B81D7477C000A017C0 /* libgloox.a in Frameworks */,
+				60AF49C81D750F7000A017C0 /* libgloox.a in Frameworks */,
 				609378921D72CF0B007DC36A /* libz.1.1.3.tbd in Frameworks */,
 				609378901D72CEEB007DC36A /* libresolv.9.tbd in Frameworks */,
 			);
@@ -62,7 +62,7 @@
 				6093788F1D72CEEB007DC36A /* libresolv.9.tbd */,
 				609378641D72CAEB007DC36A /* testGlooxIOS */,
 				609378631D72CAEB007DC36A /* Products */,
-				60AF49AF1D7477C000A017C0 /* libgloox */,
+				60AF49BA1D750F2100A017C0 /* libgloox */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,38 +99,38 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		60AF49AF1D7477C000A017C0 /* libgloox */ = {
+		60AF49BA1D750F2100A017C0 /* libgloox */ = {
 			isa = PBXGroup;
 			children = (
-				60AF49B01D7477C000A017C0 /* include */,
-				60AF49B41D7477C000A017C0 /* lib */,
-				60AF49B61D7477C000A017C0 /* src */,
+				60AF49BB1D750F2100A017C0 /* include */,
+				60AF49BF1D750F2100A017C0 /* lib */,
+				60AF49C11D750F2100A017C0 /* src */,
 			);
 			path = libgloox;
 			sourceTree = "<group>";
 		};
-		60AF49B01D7477C000A017C0 /* include */ = {
+		60AF49BB1D750F2100A017C0 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				60AF49B11D7477C000A017C0 /* gloox_callback.h */,
-				60AF49B21D7477C000A017C0 /* gloox_interface.h */,
-				60AF49B31D7477C000A017C0 /* GlooxInterfaceIOS.h */,
+				60AF49BC1D750F2100A017C0 /* gloox_callback.h */,
+				60AF49BD1D750F2100A017C0 /* gloox_interface.h */,
+				60AF49BE1D750F2100A017C0 /* GlooxInterfaceIOS.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
 		};
-		60AF49B41D7477C000A017C0 /* lib */ = {
+		60AF49BF1D750F2100A017C0 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				60AF49B51D7477C000A017C0 /* libgloox.a */,
+				60AF49C71D750F7000A017C0 /* libgloox.a */,
 			);
 			path = lib;
 			sourceTree = "<group>";
 		};
-		60AF49B61D7477C000A017C0 /* src */ = {
+		60AF49C11D750F2100A017C0 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				60AF49B71D7477C000A017C0 /* GlooxInterfaceIOS.mm */,
+				60AF49C21D750F2100A017C0 /* GlooxInterfaceIOS.mm */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -208,7 +208,7 @@
 				6093786D1D72CAEB007DC36A /* ViewController.mm in Sources */,
 				609378731D72CAEB007DC36A /* testGlooxIOS.xcdatamodeld in Sources */,
 				6093786A1D72CAEB007DC36A /* AppDelegate.m in Sources */,
-				60AF49B91D7477C000A017C0 /* GlooxInterfaceIOS.mm in Sources */,
+				60AF49C41D750F2100A017C0 /* GlooxInterfaceIOS.mm in Sources */,
 				609378671D72CAEB007DC36A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -74,7 +74,7 @@ private:
 - (void) onItemUnsubscribed:(NSString*)jid;
 - (void) onItemRemoved:(NSString*)jid;
 - (void) onItemUpdated:(NSString*)jid;
-- (void) onMessage:(NSString*)jid withMsgType:(int) msgType withSubject:(NSString*) subject withBody:(NSString*) body withThread:(NSString*) thread withSession:(id) session;
+- (void) onMessage:(NSString*)jid withMsgType:(int) msgType withSubject:(NSString*) subject withBody:(NSString*) body withThread:(NSString*) thread withSession:(void*) session;
 
 @end
 

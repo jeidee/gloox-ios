@@ -109,7 +109,7 @@ void GlooxInterface::onItemUpdated(const char* jid) {
 void GlooxInterface::onMessage(const char* jid, int msgType, const char* subject, const char* body, const char* thread, void* session) {
     printf("OnMessage] jid:%s, msgType:%d, subject:%s, body:%s, thread:%s\n", jid, msgType, subject, body, thread);
     
-    [(__bridge GlooxInterfaceIOS*)m_self onMessage:[NSString stringWithUTF8String:jid] withMsgType:msgType withSubject:[NSString stringWithUTF8String:subject] withBody:[NSString stringWithUTF8String:body] withThread:[NSString stringWithUTF8String:thread] withSession:(__bridge id)session];
+    [(__bridge GlooxInterfaceIOS*)m_self onMessage:[NSString stringWithUTF8String:jid] withMsgType:msgType withSubject:[NSString stringWithUTF8String:subject] withBody:[NSString stringWithUTF8String:body] withThread:[NSString stringWithUTF8String:thread] withSession:session];
 }
 
 
@@ -339,7 +339,7 @@ void GlooxInterface::sendMessage(const char* jid, const char* msg) {
     
 }
 
-- (void) onMessage:(NSString*)jid withMsgType:(int) msgType withSubject:(NSString*) subject withBody:(NSString*) body withThread:(NSString*) thread withSession:(id) session {
+- (void) onMessage:(NSString*)jid withMsgType:(int) msgType withSubject:(NSString*) subject withBody:(NSString*) body withThread:(NSString*) thread withSession:(void*) session {
     dispatch_async(dispatch_get_main_queue(), ^ {
         for (id eventHandler in m_eventHandlerList) {
             if ([eventHandler respondsToSelector:@selector(onMessage:withMsgType:withSubject:withBody:withThread:withSession:)])

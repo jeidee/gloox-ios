@@ -49,7 +49,6 @@ clean:
 	rm -rf $(BUILDDIR)
 	rm -rf $(TARGETDIR)
 
-distclean:
-	rm -rf $(BUILDDIR)
-	rm -rf $(TARGETDIR)
+distclean: clean
 	rm -rf $(GLOOX_NAME)
+	rm -rf $(GLOOX_TAR)
