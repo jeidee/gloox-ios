@@ -32,7 +32,6 @@
 .DS_Store
 
 # Temporary files and directories
-gloox*/
 build/
 out/
 tmp/
