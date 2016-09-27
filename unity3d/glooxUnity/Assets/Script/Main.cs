@@ -1,79 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using AOT;
-using System.Threading;
-using System.Runtime.InteropServices;
 
 public class Main : MonoBehaviour {
 
-	IntPtr m_glooxWrapper;
-	static bool m_connected = false;
-	float m_tick = 0f;
-	Thread m_recvThread;
-
-	[MonoPInvokeCallback(typeof(callbackLogFunc))]
-	public static void onLog(string tag, string log) {
-		Debug.Log(tag + "::" + log);
-	}
-
-	[MonoPInvokeCallback(typeof(callbackConnectFunc))]
-	public static void onConnect() {
-		Debug.Log("Connected~");
-		m_connected = true;
-	}
+	private Gloox m_gloox;
 
 	// Use this for initialization
 	void Start () {
-		m_glooxWrapper = gwCreateInstance();
+		m_gloox = Gloox.Instance;
 
-		gwRegisterOnLog(m_glooxWrapper, onLog);
-		gwRegisterOnConnect(m_glooxWrapper, onConnect);
-
-		if (!gwConnect(m_glooxWrapper, "test1@bypass", "1234", "msg.iam0.com", 5223)) {
-			Debug.Log("Connect failed");
-		}
-		// StartCoroutine(Connect());
-
-		m_recvThread = new Thread(Recv);
-		m_recvThread.Start();
+		m_gloox.ConnectHandler += new Gloox.callbackConnectFunc(onConnect);
+		m_gloox.LogHandler += new Gloox.callbackLogFunc(onLog);
+		m_gloox.DisconnectHandler += new Gloox.callbackDisconnectFunc(onDisconnect);
 	}
 
-	void Recv() {
-		while(true) {
-			int e = gwRecv(m_glooxWrapper);
-			if (e != 0) {
-				Debug.Log("Recv failed");
-				break;
-			}
-
-			Thread.Sleep(1);
-		}
-	}
-
-	// IEnumerator Connect() {
-	// 	if (!connect(mMsgClient, "test1@bypass", "1234", "msg.iam0.com", 5223)) {
-	// 		Debug.Log("Connect failed");
-	// 	}
-
-	// 	while(true) {
-	// 		int e = recv(mMsgClient);
-	// 		if (e == 0 && !mConnected) {
-	// 			yield return new WaitForSeconds(1);
-	// 		}
-
-	// 		if (e != 0) {
-	// 			Debug.Log("Recv error..." + e.ToString());
-	// 		}
-	// 	}
-	// }
-	
 	// Update is called once per frame
 	void Update () {
 	}
 
 	void OnDestroy() {
-		gwDeleteInstance(m_glooxWrapper);
+
+	}
+
+	void onConnect() {
+		Debug.Log("connect......>");
+	}
+
+	void onDisconnect(int e) {
+		Debug.Log("disconnect....");
+	}
+
+	void onLog(string tag, string log) {
+		Debug.Log("log......>");
+		Debug.Log(tag);
+		Debug.Log(log);
+	}
+
+	void OnGUI() {
+		if (GUI.Button(new Rect(10, 10, 100, 100), "Connect")) {
+			if (!m_gloox.Connect("test1@bypass", "1234", "msg.iam0.com", 5223)) {
+				Debug.Log("Connect failed");
+			}
+		}
 	}
 }

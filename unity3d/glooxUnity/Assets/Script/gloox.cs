@@ -6,37 +6,58 @@ using AOT;
 using System.Threading;
 using System.Runtime.InteropServices;
 
-public class gloox : MonoBehaviour {
+public class Gloox : MonoBehaviour {
 
-	private delegate void callbackConnectFunc();
-	private delegate void callbackDisconnectFunc(int e);
-	private delegate void callbackLogFunc(string tag, string messge);
+	// for singleton
+	private static Gloox _instance;  
+	public static Gloox Instance  
+	{  
+		get  
+		{  
+			if (!_instance)  
+			{  
+				_instance = GameObject.FindObjectOfType<Gloox>();  
+				if (!_instance)  
+				{  
+						GameObject container = new GameObject();  
+						container.name = "GlooxContainer";  
+						_instance = container.AddComponent<Gloox>();  
+				}  
+			}  
 
-	private delegate void callbackRosterFunc(string jid
+			return _instance;  
+		}  
+	}
+
+	public delegate void callbackConnectFunc();
+	public delegate void callbackDisconnectFunc(int e);
+	public delegate void callbackLogFunc(string tag, string messge);
+
+	public delegate void callbackRosterFunc(string jid
 		, string nickname
 		, int subscription
 		, string groups
 		, int no
 		, int totalCount);
-	private delegate void callbackVCardFunc(string jid
+	public delegate void callbackVCardFunc(string jid
 		, string nickname
 		, string photo);
-	private delegate void callbackPresenceFunc(string rosterJid
+	public delegate void callbackPresenceFunc(string rosterJid
 		, string rosterNickname
 		, int rosterSubscription
 		, string resource
 		, int presence
 		, string msg);
-	private delegate void callbackSubscriptionRequestFunc(string jid
+	public delegate void callbackSubscriptionRequestFunc(string jid
 		, string msg);
-	private delegate void callbackUnsubscriptionRequestFunc(string jid
+	public delegate void callbackUnsubscriptionRequestFunc(string jid
 		, string msg);
-	private delegate void callbackItemSubscribedFunc(string jid);
-	private delegate void callbackItemAddedFunc(string jid);
-	private delegate void callbackItemUnsubscribedFunc(string jid);
-	private delegate void callbackItemRemovedFunc(string jid);
-	private delegate void callbackItemUpdatedFunc(string jid);
-	private delegate void callbackMessageFunc(string jid
+	public delegate void callbackItemSubscribedFunc(string jid);
+	public delegate void callbackItemAddedFunc(string jid);
+	public delegate void callbackItemUnsubscribedFunc(string jid);
+	public delegate void callbackItemRemovedFunc(string jid);
+	public delegate void callbackItemUpdatedFunc(string jid);
+	public delegate void callbackMessageFunc(string jid
 		, int msgType
 		, string subject
 		, string body
@@ -266,120 +287,196 @@ public class gloox : MonoBehaviour {
 		, string jid
 		, string msg);
 
-	IntPtr m_glooxWrapper;
-	static bool m_connected = false;
-	Thread m_recvThread;
-
 	[MonoPInvokeCallback(typeof(callbackConnectFunc))]
-	public static void onConnect() {
-		Debug.Log("Connected!");
-		m_connected = true;
+	public void onConnect() {
+		//Debug.Log("Connected!");
+		Gloox.Instance.m_connected = true;
+
+		if (Gloox.Instance.ConnectHandler != null) {
+			Gloox.Instance.ConnectHandler();
+		}
 	}
 
 	[MonoPInvokeCallback(typeof(callbackDisconnectFunc))]
-	public static void onDisconnect(int e) {
-		Debug.Log("Disconnected. e = " + e.ToString());
+	public void onDisconnect(int e) {
+		//Debug.Log("Disconnected. e = " + e.ToString());
 		m_connected = false;
+
+		if (Gloox.Instance.DisconnectHandler != null) {
+			Gloox.Instance.DisconnectHandler(e);
+		}
 	}
 
 	[MonoPInvokeCallback(typeof(callbackLogFunc))]
-	public static void onLog(string tag, string log) {
-		Debug.Log("onLog >> " +  tag + "::" + log);
+	public void onLog(string tag, string log) {
+		//Debug.Log("onLog >> " +  tag + "::" + log);
+
+		if (Gloox.Instance.LogHandler != null) {
+			Gloox.Instance.LogHandler(tag, log);
+		}
 	}
 
 	[MonoPInvokeCallback(typeof(callbackRosterFunc))]
-	public static void onRoster(string jid
+	public void onRoster(string jid
 		, string nickname
 		, int subscription
 		, string groups
 		, int no
 		, int totalCount) {
-		Debug.Log("onRoster >> " + jid
-			+ ", " + nickname
-			+ ", subscription=" + subscription.ToString());
+		// Debug.Log("onRoster >> " + jid
+		// 	+ ", " + nickname
+		// 	+ ", subscription=" + subscription.ToString());
+		if (Gloox.Instance.RosterHandler != null) {
+			Gloox.Instance.RosterHandler(jid
+				, nickname
+				, subscription
+				, groups
+				, no
+				, totalCount);
+		}
 	}
 
 	[MonoPInvokeCallback(typeof(callbackVCardFunc))]
-	public static void onVCard(string jid
+	public void onVCard(string jid
 		, string nickname
 		, string photo) {
-		Debug.Log("onVCard >> " + jid
-			+ ", " + nickname
-			+ ", " + photo);
+		// Debug.Log("onVCard >> " + jid
+		// 	+ ", " + nickname
+		// 	+ ", " + photo);
+		if (Gloox.Instance.VCardHandler != null) {
+			Gloox.Instance.VCardHandler(jid, nickname, photo);
+		}
 	}
 
 	[MonoPInvokeCallback(typeof(callbackPresenceFunc))]
-	public static void onPresence(string rosterJid
+	public void onPresence(string rosterJid
 		, string rosterNickname
 		, int rosterSubscription
 		, string resource
 		, int presence
 		, string msg) {
-		Debug.Log("onPresence >> " + rosterJid
-			+ ", nick = " + rosterNickname
-			+ ", subscription = " + rosterSubscription.ToString()
-			+ ", resource = " + resource
-			+ ", presence = " + presence.ToString()
-			+ ", msg = " + msg);
+		// Debug.Log("onPresence >> " + rosterJid
+		// 	+ ", nick = " + rosterNickname
+		// 	+ ", subscription = " + rosterSubscription.ToString()
+		// 	+ ", resource = " + resource
+		// 	+ ", presence = " + presence.ToString()
+		// 	+ ", msg = " + msg);
+		if (Gloox.Instance.PresenceHandler != null) {
+			Gloox.Instance.PresenceHandler(rosterJid
+				, rosterNickname
+				, rosterSubscription
+				, resource
+				, presence
+				, msg);
+		}
 	}
 	
 	[MonoPInvokeCallback(typeof(callbackSubscriptionRequestFunc))]
-	public static void onSubscriptionRequest(string jid
+	public void onSubscriptionRequest(string jid
 		, string msg) {
-		Debug.Log("onSubscriptionRequest >> " + jid
-			+ ", msg = " + msg);
+		// Debug.Log("onSubscriptionRequest >> " + jid
+		// 	+ ", msg = " + msg);
+		if (Gloox.Instance.SubscriptionRequestHandler != null) {
+			Gloox.Instance.SubscriptionRequestHandler(jid, msg);
+		}
 	}
 
 	[MonoPInvokeCallback(typeof(callbackUnsubscriptionRequestFunc))]
-	public static void onUnsubscriptionRequest(string jid
+	public void onUnsubscriptionRequest(string jid
 		, string msg) {
-		Debug.Log("onUnsubscriptionRequest >> " + jid
-			+ ", msg = " + msg);
+		// Debug.Log("onUnsubscriptionRequest >> " + jid
+		// 	+ ", msg = " + msg);
+		if (Gloox.Instance.UnsubscriptionRequestHandler != null) {
+			Gloox.Instance.UnsubscriptionRequestHandler(jid, msg);
+		}
 	}
 
 	[MonoPInvokeCallback(typeof(callbackItemSubscribedFunc))]
-	public static void onItemSubscribed(string jid) {
-		Debug.Log("onItemSubscribed >> " + jid);
+	public void onItemSubscribed(string jid) {
+		// Debug.Log("onItemSubscribed >> " + jid);
+		if (Gloox.Instance.ItemSubscribedHandler != null) {
+			Gloox.Instance.ItemSubscribedHandler(jid);
+		}
 	}
 	
 	[MonoPInvokeCallback(typeof(callbackItemUnsubscribedFunc))]
-	public static void onItemUnsubscribed(string jid) {
-		Debug.Log("onItemUnsubscribed >> " + jid);
+	public void onItemUnsubscribed(string jid) {
+		// Debug.Log("onItemUnsubscribed >> " + jid);
+		if (Gloox.Instance.ItemUnsubscribedHandler != null) {
+			Gloox.Instance.ItemUnsubscribedHandler(jid);
+		}
 	}
 
 	[MonoPInvokeCallback(typeof(callbackItemAddedFunc))]
-	public static void onItemAdded(string jid) {
-		Debug.Log("onItemAdded >> " + jid);
+	public void onItemAdded(string jid) {
+		// Debug.Log("onItemAdded >> " + jid);
+		if (Gloox.Instance.ItemAddedHandler != null) {
+			Gloox.Instance.ItemAddedHandler(jid);
+		}
 	}
 
 	[MonoPInvokeCallback(typeof(callbackItemRemovedFunc))]
-	public static void onItemRemoved(string jid) {
-		Debug.Log("onItemRemoved >> " + jid);
+	public void onItemRemoved(string jid) {
+		// Debug.Log("onItemRemoved >> " + jid);
+		if (Gloox.Instance.ItemRemovedHandler != null) {
+			Gloox.Instance.ItemRemovedHandler(jid);
+		}
 	}
 	
 	[MonoPInvokeCallback(typeof(callbackItemUpdatedFunc))]
-	public static void onItemUpdated(string jid) {
-		Debug.Log("onItemUpdated >> " + jid);
+	public void onItemUpdated(string jid) {
+		// Debug.Log("onItemUpdated >> " + jid);
+		if (Gloox.Instance.ItemUpdatedHandler != null) {
+			Gloox.Instance.ItemUpdatedHandler(jid);
+		}
 	}
 
 	[MonoPInvokeCallback(typeof(callbackMessageFunc))]
-	public static void onMessage(string jid
+	public void onMessage(string jid
 		, int msgType
 		, string subject
 		, string body
 		, string thread
 		, IntPtr session) {
-		Debug.Log("onMessage >> " + jid
-			+ ", msgType = " + msgType.ToString()
-			+ ", subject = " + subject
-			+ ", body = " + body
-			+ ", thread = " + thread
-			+ ", session = " + session.ToString());
+		// Debug.Log("onMessage >> " + jid
+		// 	+ ", msgType = " + msgType.ToString()
+		// 	+ ", subject = " + subject
+		// 	+ ", body = " + body
+		// 	+ ", thread = " + thread
+		// 	+ ", session = " + session.ToString());
+		if (Gloox.Instance.MessageHandler != null) {
+			Gloox.Instance.MessageHandler(jid
+				, msgType
+				, subject
+				, body
+				, thread
+				, session);
+		}
 	}
-	
-여기작업중
+
+	public event callbackConnectFunc ConnectHandler;
+	public event callbackDisconnectFunc DisconnectHandler;
+	public event callbackLogFunc LogHandler;
+	public event callbackRosterFunc RosterHandler;
+	public event callbackVCardFunc VCardHandler;
+	public event callbackPresenceFunc PresenceHandler;
+	public event callbackSubscriptionRequestFunc SubscriptionRequestHandler;
+	public event callbackUnsubscriptionRequestFunc UnsubscriptionRequestHandler;
+	public event callbackItemSubscribedFunc ItemSubscribedHandler;
+	public event callbackItemAddedFunc ItemAddedHandler;
+	public event callbackItemUnsubscribedFunc ItemUnsubscribedHandler;
+	public event callbackItemRemovedFunc ItemRemovedHandler;
+	public event callbackItemUpdatedFunc ItemUpdatedHandler;
+	public event callbackMessageFunc MessageHandler;
+
+	IntPtr m_glooxWrapper;
+	Thread m_recvThread;
+	public bool m_connected = false;
+
 	// Use this for initialization
 	void Start () {
+		Debug.Log("Gloox Started!");
+
 		m_glooxWrapper = gwCreateInstance();
 
 		gwRegisterOnLog(m_glooxWrapper, onLog);
@@ -391,6 +488,7 @@ public class gloox : MonoBehaviour {
 	}
 
 	void OnDestroy() {
+		Disconnect();
 		gwDeleteInstance(m_glooxWrapper);
 	}
 
@@ -424,6 +522,86 @@ public class gloox : MonoBehaviour {
 	}
 
 	public void Disconnect() {
-		gwDis
+		if (!m_connected) {
+			Debug.Log("Already disconnected.");
+			return;
+		}
+
+		if (!gwDisconnect(m_glooxWrapper)) {
+			Debug.Log("Disconnection failed");
+			return;
+		}
+	}
+
+	public void fetchVCard(string jid) {
+		if (!m_connected) {
+			Debug.Log("Connection closed");
+			return;
+		}
+
+		gwFetchVCard(m_glooxWrapper, jid);
+	}
+
+	public void setPresence(int presenceType, int priority, string status) {
+		if (!m_connected) {
+			Debug.Log("Connection closed");
+			return;
+		}
+
+		gwSetPresence(m_glooxWrapper, presenceType, priority, status);
+	}
+
+	public void subscribe(string jid, string name, string groups, string msg) {
+		if (!m_connected) {
+			Debug.Log("Connection closed");
+			return;
+		}
+
+		gwSubscribe(m_glooxWrapper, jid, name, groups, msg);
+	}
+
+	public void unsubscribe(string jid, string msg) {
+		if (!m_connected) {
+			Debug.Log("Connection closed");
+			return;
+		}
+
+		gwUnsubscribe(m_glooxWrapper, jid, msg);
+	}
+
+	public void getRosterItem(string jid) {
+		if (!m_connected) {
+			Debug.Log("Connection closed");
+			return;
+		}
+
+		gwGetRosterItem(m_glooxWrapper, jid);
+	}
+	
+	public void ackSubscriptionRequest(string jid, bool ack) {
+		if (!m_connected) {
+			Debug.Log("Connection closed");
+			return;
+		}
+
+		gwAckSubscriptionRequest(m_glooxWrapper, jid, ack);
+	}
+	
+	public void removeRoster(string jid) {
+		if (!m_connected) {
+			Debug.Log("Connection closed");
+			return;
+		}
+
+		gwRemoveRoster(m_glooxWrapper, jid);
+	}
+	
+	public void sendMessage(string jid, string msg) {
+		if (!m_connected) {
+			Debug.Log("Connection closed");
+			return;
+		}
+
+		gwSendMessage(m_glooxWrapper, jid, msg);
 	}
 }
